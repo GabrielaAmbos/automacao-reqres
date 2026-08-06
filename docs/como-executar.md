@@ -5,6 +5,7 @@
 - **JDK 15+** instalado e no `PATH`
 - **Maven 3.6+**
 - Conexão com a internet (os testes batem na API pública reqres.in)
+- **Chave de API do reqres** — obrigatória, veja abaixo
 
 Verificação rápida:
 
@@ -12,6 +13,21 @@ Verificação rápida:
 java -version
 mvn -version
 ```
+
+## Configurando a chave de API
+
+O reqres.in exige o header `x-api-key` em todas as requisições. Sem ele a API responde `401`, e com uma chave inválida responde `403`.
+
+1. Gere uma chave gratuita em <https://app.reqres.in/api-keys>
+2. Exporte na variável de ambiente `REQRES_API_KEY`:
+
+```bash
+export REQRES_API_KEY='sua-chave-aqui'
+```
+
+Para tornar permanente, adicione a linha ao seu `~/.zshrc` ou `~/.bashrc`.
+
+A chave **nunca** deve ser commitada no repositório. Se ela não estiver definida, os testes falham imediatamente com uma mensagem explicando o que fazer.
 
 ## Instalando as dependências
 
@@ -21,21 +37,25 @@ mvn clean install -DskipTests
 
 ## Executando os testes
 
-Por causa da convenção de nomes das classes, o `mvn test` puro **não executa nada** (ver [Problemas conhecidos](#problemas-conhecidos)). Use a execução explícita:
-
 ```bash
-mvn test -Dtest='PostCreate,GetSingleUser'
+mvn test
 ```
 
 Rodando um único cenário:
 
 ```bash
-mvn test -Dtest=PostCreate
+mvn test -Dtest=PostCreateTest
+```
+
+Passando a chave apenas para uma execução:
+
+```bash
+REQRES_API_KEY='sua-chave-aqui' mvn test
 ```
 
 ### Pela IDE
 
-No IntelliJ IDEA ou Eclipse, basta abrir a classe de teste e executar o método diretamente — a IDE invoca o runner do JUnit sem passar pelo Surefire, então a limitação de nomenclatura não se aplica.
+No IntelliJ IDEA ou Eclipse, execute a classe ou o método diretamente. A variável `REQRES_API_KEY` precisa estar disponível para o processo da IDE — configure em *Run/Debug Configurations → Environment variables* ou exporte antes de abrir a IDE.
 
 ## Relatórios
 
@@ -43,64 +63,18 @@ Após a execução, os resultados ficam em:
 
 ```
 target/surefire-reports/
-├── tests.PostCreate.txt
-└── tests.GetSingleUser.txt
+├── tests.PostCreateTest.txt
+└── tests.GetSingleUserTest.txt
 ```
 
 ---
 
 ## Problemas conhecidos
 
-### 1. API exige o header `x-api-key` (testes falham com 401)
+### Asserções do GET dependem de dados fixos
 
-O reqres.in passou a exigir autenticação por chave de API. Sem o header, qualquer requisição retorna:
+`GetSingleUserTest` valida os dados do usuário de id 3 (`Emma Wong`). Esses valores vêm da base estática do reqres — se a API alterar o registro, o teste quebra por motivo alheio ao código.
 
-```json
-{
-  "error": "missing_api_key",
-  "message": "The x-api-key header is required for this endpoint."
-}
-```
+### `target/` e `.idea/` não estão no `.gitignore`
 
-Isso faz os dois testes atuais falharem com `Expected status code <201> but was <401>` e `Expected status code <200> but was <401>`.
-
-**Como corrigir**: gerar uma chave gratuita em <https://app.reqres.in/api-keys> e adicionar o header nas requisições:
-
-```java
-given()
-        .header("x-api-key", System.getenv("REQRES_API_KEY"))
-        .contentType(ContentType.JSON)
-```
-
-O ideal é centralizar isso em um `@Before` ou em um `RequestSpecification` compartilhado, em vez de repetir em cada teste. A chave deve vir de variável de ambiente, nunca commitada no repositório.
-
-### 2. `mvn test` não executa nenhum teste
-
-O Maven Surefire só coleta classes que casem com `Test*`, `*Test`, `*Tests` ou `*TestCase`. As classes `PostCreate` e `GetSingleUser` não casam com nenhum padrão, então o build passa com sucesso sem rodar nada — um falso positivo perigoso em CI.
-
-Há duas formas de resolver:
-
-**Opção A — renomear as classes** (recomendada, segue a convenção da comunidade):
-
-```
-PostCreate.java    →  PostCreateTest.java
-GetSingleUser.java →  GetSingleUserTest.java
-```
-
-**Opção B — configurar o Surefire** no `pom.xml`:
-
-```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-                <includes>
-                    <include>**/tests/*.java</include>
-                </includes>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-```
+O `.gitignore` cobre `*.class` e `*.jar`, mas não os diretórios. O `.idea/` inclusive está versionado.

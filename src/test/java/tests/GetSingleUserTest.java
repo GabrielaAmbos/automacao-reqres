@@ -1,20 +1,18 @@
 package tests;
 
-import io.restassured.http.ContentType;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 
-public class GetSingleUser {
+public class GetSingleUserTest extends BaseApiTest {
 
     @Test
-    public void deveConsultarUsuarioExistente() {
+    public void shouldGetExistingUser() {
         given()
-                .contentType(ContentType.JSON)
+                .spec(requestSpec)
         .when()
-                .get("https://reqres.in/api/users/3")
+                .get("/api/users/3")
         .then()
                 .statusCode(200)
                 .body("data.id", is(3))

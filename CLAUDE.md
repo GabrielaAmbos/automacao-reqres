@@ -20,28 +20,28 @@ Documentação completa em [docs/](docs/README.md).
 
 ```
 src/test/java/tests/
-├── PostCreate.java      # POST /api/users
-└── GetSingleUser.java   # GET /api/users/3
+├── BaseApiTest.java         # Spec compartilhada: baseURI, content-type, x-api-key
+├── PostCreateTest.java      # POST /api/users
+└── GetSingleUserTest.java   # GET /api/users/3
 ```
 
 ## Comandos
 
 ```bash
-mvn test -Dtest='PostCreate,GetSingleUser'   # roda os testes
-mvn test -Dtest=PostCreate                   # roda um cenário
+export REQRES_API_KEY='...'   # obrigatório — chave gratuita em app.reqres.in/api-keys
+mvn test                      # roda os testes
+mvn test -Dtest=PostCreateTest
 ```
-
-`mvn test` sozinho **não roda nada** — as classes não casam com os padrões de nome do Surefire (`*Test`, `Test*`, `*Tests`, `*TestCase`).
 
 ## Estado conhecido (verificado em 06/08/2026)
 
-1. **Os dois testes falham com 401.** O reqres.in passou a exigir o header `x-api-key`. Correção: chave gratuita em app.reqres.in + header nas requisições, lida de variável de ambiente.
-2. **`mvn test` é um falso positivo**: build passa com sucesso sem executar teste algum.
+1. **A API exige `x-api-key`.** Sem header → `401`; chave inválida → `403`. A chave é lida de `REQRES_API_KEY` no `@BeforeClass` de `BaseApiTest`, que falha com `IllegalStateException` explicativa se a variável estiver ausente. **Nunca commitar a chave.**
+2. **Asserções do GET dependem de dados fixos** do reqres (usuário id 3 = Emma Wong) — quebram se a API alterar o registro.
 3. **`.gitignore` incompleto**: `target/` e `.idea/` não estão ignorados; `.idea/` está inclusive versionado.
 
 ## Convenções
 
-- **Código em inglês** (variáveis, métodos, classes, arquivos). Os métodos existentes estão em português (`deveCriarUmUsuario`) por legado — não replicar em código novo.
+- **Código em inglês** (variáveis, métodos, classes, arquivos).
 - **Comentários em português**, e apenas quando explicam decisão de negócio.
 - **Documentação em português.**
 - **Commits em português**, padrão Conventional Commits: `feat(...)`, `fix(...)`, `chore(...)`.
@@ -50,16 +50,20 @@ mvn test -Dtest=PostCreate                   # roda um cenário
 
 ## Padrão dos testes
 
-DSL Given-When-Then do REST Assured, com asserções GPath sobre o corpo JSON:
+Classes estendem `BaseApiTest` e usam o `requestSpec` herdado. DSL Given-When-Then do REST Assured, com asserções GPath sobre o corpo JSON e paths relativos:
 
 ```java
-given()
-        .contentType(ContentType.JSON)
-.when()
-        .get("https://reqres.in/api/users/3")
-.then()
-        .statusCode(200)
-        .body("data.id", is(3));
-```
+public class GetSingleUserTest extends BaseApiTest {
 
-URL base hardcoded em cada teste — candidata a extração para `RestAssured.baseURI` num setup compartilhado quando o número de cenários crescer.
+    @Test
+    public void shouldGetExistingUser() {
+        given()
+                .spec(requestSpec)
+        .when()
+                .get("/api/users/3")
+        .then()
+                .statusCode(200)
+                .body("data.id", is(3));
+    }
+}
+```
