@@ -3,8 +3,8 @@ package tests;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class PostCreateTest extends BaseApiTest {
 
@@ -12,10 +12,12 @@ public class PostCreateTest extends BaseApiTest {
     public void shouldCreateUser() {
         given()
                 .spec(requestSpec)
-                .body("{\n"
-                        + "    \"name\": \"Gabriela\",\n"
-                        + "    \"job\": \"QA\"\n"
-                        + "}")
+                .body("""
+                        {
+                            "name": "Gabriela",
+                            "job": "QA"
+                        }
+                        """)
         .when()
                 .post("/api/users")
         .then()
