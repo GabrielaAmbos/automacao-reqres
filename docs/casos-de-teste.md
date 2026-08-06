@@ -2,8 +2,8 @@
 
 ## CT-01 — Criar usuário
 
-**Arquivo**: [PostCreate.java](../src/test/java/tests/PostCreate.java)
-**Método**: `deveCriarUmUsuario()`
+**Arquivo**: [PostCreateTest.java](../src/test/java/tests/PostCreateTest.java)
+**Método**: `shouldCreateUser()`
 
 Valida que a API cria um usuário e devolve os dados enviados junto com os campos gerados pelo servidor.
 
@@ -12,6 +12,7 @@ Valida que a API cria um usuário e devolve os dados enviados junto com os campo
 ```http
 POST https://reqres.in/api/users
 Content-Type: application/json
+x-api-key: $REQRES_API_KEY
 
 {
     "name": "Gabriela",
@@ -35,8 +36,8 @@ Os campos gerados pelo servidor (`id` e `createdAt`) são validados apenas por p
 
 ## CT-02 — Consultar usuário existente
 
-**Arquivo**: [GetSingleUser.java](../src/test/java/tests/GetSingleUser.java)
-**Método**: `deveConsultarUsuarioExistente()`
+**Arquivo**: [GetSingleUserTest.java](../src/test/java/tests/GetSingleUserTest.java)
+**Método**: `shouldGetExistingUser()`
 
 Valida o contrato de retorno de um usuário conhecido da base de dados fixa do reqres.
 
@@ -45,6 +46,7 @@ Valida o contrato de retorno de um usuário conhecido da base de dados fixa do r
 ```http
 GET https://reqres.in/api/users/3
 Content-Type: application/json
+x-api-key: $REQRES_API_KEY
 ```
 
 ### Asserções
