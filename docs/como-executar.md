@@ -57,23 +57,23 @@ REQRES_API_KEY='sua-chave-aqui' mvn test
 
 No IntelliJ IDEA ou Eclipse, execute a classe ou o método diretamente. A variável `REQRES_API_KEY` precisa estar disponível para o processo da IDE — configure em *Run/Debug Configurations → Environment variables* ou exporte antes de abrir a IDE.
 
+A suíte tem 19 testes e leva cerca de 10 segundos — o `GetUserListTest` sozinho gasta 3s no cenário de `delay`.
+
 ## Relatórios
 
-Após a execução, os resultados ficam em:
-
-```
-target/surefire-reports/
-├── tests.PostCreateTest.txt
-└── tests.GetSingleUserTest.txt
-```
+Após a execução, os resultados de cada classe ficam em `target/surefire-reports/`, um arquivo `.txt` e um `.xml` por classe de teste.
 
 ---
 
 ## Problemas conhecidos
 
-### Asserções do GET dependem de dados fixos
+### Asserções dependem de dados fixos
 
-`GetSingleUserTest` valida os dados do usuário de id 3 (`Emma Wong`). Esses valores vêm da base estática do reqres — se a API alterar o registro, o teste quebra por motivo alheio ao código.
+Vários testes validam registros da base estática do reqres — `Emma Wong` (usuário 3), `fuchsia rose` (recurso 2), os totais de paginação. Se a API alterar esses dados, os testes quebram por motivo alheio ao código.
+
+### Exigência da chave é intermitente
+
+Em 06/08/2026 a API alternou entre bloquear requisições sem chave (`401`) e respondê-las normalmente (`200`) no intervalo de poucos minutos. O header continua sendo enviado sempre — é o comportamento correto e funciona nos dois casos —, mas não há testes assertando `401`/`403`, que seriam instáveis.
 
 ### `target/` e `.idea/` não estão no `.gitignore`
 

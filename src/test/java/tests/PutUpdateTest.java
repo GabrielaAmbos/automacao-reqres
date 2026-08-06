@@ -6,25 +6,24 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class PostCreateTest extends BaseApiTest {
+public class PutUpdateTest extends BaseApiTest {
 
     @Test
-    public void shouldCreateUser() {
+    public void shouldReplaceUser() {
         given()
                 .spec(requestSpec)
                 .body("""
                         {
                             "name": "Gabriela",
-                            "job": "QA"
+                            "job": "QA Lead"
                         }
                         """)
         .when()
-                .post("/api/users")
+                .put("/api/users/2")
         .then()
-                .statusCode(201)
-                .body("id", is(notNullValue()))
+                .statusCode(200)
                 .body("name", is("Gabriela"))
-                .body("job", is("QA"))
-                .body("createdAt", is(notNullValue()));
+                .body("job", is("QA Lead"))
+                .body("updatedAt", is(notNullValue()));
     }
 }

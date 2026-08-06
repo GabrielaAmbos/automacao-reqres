@@ -14,8 +14,9 @@ O objetivo é validar contratos e comportamentos dos endpoints de usuários por 
 
 ## Status atual
 
-- **2 cenários automatizados**: criação de usuário (POST) e consulta de usuário (GET).
-- **Requer chave de API**: o reqres.in exige o header `x-api-key`. Configure a variável `REQRES_API_KEY` antes de rodar — ver [Como Executar](como-executar.md#configurando-a-chave-de-api).
+- **19 cenários automatizados**, cobrindo todos os endpoints públicos do reqres: listagem paginada, consulta, criação, atualização (PUT/PATCH), exclusão, recursos, registro e login — incluindo os caminhos de erro `404` e `400`.
+- **Suíte verde e estável**: `Tests run: 19, Failures: 0, Errors: 0` em execuções consecutivas.
+- **Requer chave de API**: configure a variável `REQRES_API_KEY` antes de rodar — ver [Como Executar](como-executar.md#configurando-a-chave-de-api).
 
 ## Referências
 

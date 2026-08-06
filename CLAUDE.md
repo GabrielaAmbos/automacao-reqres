@@ -18,11 +18,20 @@ Documentação completa em [docs/](docs/README.md).
 
 ## Estrutura
 
+Uma classe por endpoint, 19 testes no total:
+
 ```
 src/test/java/tests/
 ├── BaseApiTest.java         # Spec compartilhada: baseURI, content-type, x-api-key
+├── GetUserListTest.java     # GET /api/users — paginação e delay
+├── GetSingleUserTest.java   # GET /api/users/{id} — sucesso e 404
 ├── PostCreateTest.java      # POST /api/users
-└── GetSingleUserTest.java   # GET /api/users/3
+├── PutUpdateTest.java       # PUT /api/users/{id}
+├── PatchUpdateTest.java     # PATCH /api/users/{id}
+├── DeleteUserTest.java      # DELETE /api/users/{id}
+├── GetResourceTest.java     # GET /api/unknown — lista, item e 404
+├── PostRegisterTest.java    # POST /api/register
+└── PostLoginTest.java       # POST /api/login
 ```
 
 ## Comandos
@@ -35,9 +44,11 @@ mvn test -Dtest=PostCreateTest
 
 ## Estado conhecido (verificado em 06/08/2026)
 
-1. **A API exige `x-api-key`.** Sem header → `401`; chave inválida → `403`. A chave é lida de `REQRES_API_KEY` no `@BeforeClass` de `BaseApiTest`, que falha com `IllegalStateException` explicativa se a variável estiver ausente. **Nunca commitar a chave.**
-2. **Asserções do GET dependem de dados fixos** do reqres (usuário id 3 = Emma Wong) — quebram se a API alterar o registro.
-3. **`.gitignore` incompleto**: `target/` e `.idea/` não estão ignorados; `.idea/` está inclusive versionado.
+1. **Suíte verde**: `Tests run: 19, Failures: 0, Errors: 0`, estável em execuções consecutivas.
+2. **A API usa `x-api-key`.** A chave é lida de `REQRES_API_KEY` no `@BeforeClass` de `BaseApiTest`, que falha com `IllegalStateException` explicativa se a variável estiver ausente. **Nunca commitar a chave.**
+3. **A exigência da chave é intermitente**: no mesmo dia a API alternou entre `401` sem header e `200` sem header. Por isso não há testes assertando `401`/`403` — seriam flaky. O header continua sendo enviado sempre.
+4. **Asserções dependem de dados fixos** do reqres (usuário 3 = Emma Wong, recurso 2 = fuchsia rose, `total` = 12) — quebram se a API alterar os registros.
+5. **`.gitignore` incompleto**: `target/` e `.idea/` não estão ignorados; `.idea/` está inclusive versionado.
 
 ## Convenções
 
