@@ -77,4 +77,4 @@ O projeto é pequeno e a estrutura foi mantida proporcional. Pontos que valem re
 - **Sem validação de schema**: as asserções são campo a campo. `JsonSchemaValidator` do REST Assured cobriria o contrato inteiro de uma vez, ao custo de uma dependência a mais.
 - **Asserções sobre dados fixos**: valores como `Emma Wong` (usuário 3) e `fuchsia rose` (recurso 2) vêm da base estática do reqres. Se a API alterar esses registros, os testes quebram por motivo alheio ao código.
 - **Testes de erro de autenticação ausentes**: o `401`/`403` do reqres é intermitente e tornaria a suíte instável. Ver [Casos de Teste](casos-de-teste.md#fora-de-cobertura).
-- **`target/` e `.idea/` não ignorados**: o `.gitignore` cobre `*.class` e `*.jar`, mas não os diretórios `target/` e `.idea/` — este último inclusive está versionado.
+- **`.idea/` ainda versionado**: o diretório já está no `.gitignore`, mas o ignore não vale para o que já era rastreado. Removê-lo do repositório exige `git rm -r --cached .idea`, o que impacta quem já clonou.

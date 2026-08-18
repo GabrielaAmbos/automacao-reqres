@@ -75,6 +75,6 @@ Vários testes validam registros da base estática do reqres — `Emma Wong` (us
 
 Em 06/08/2026 a API alternou entre bloquear requisições sem chave (`401`) e respondê-las normalmente (`200`) no intervalo de poucos minutos. O header continua sendo enviado sempre — é o comportamento correto e funciona nos dois casos —, mas não há testes assertando `401`/`403`, que seriam instáveis.
 
-### `target/` e `.idea/` não estão no `.gitignore`
+### `.idea/` ainda versionado
 
-O `.gitignore` cobre `*.class` e `*.jar`, mas não os diretórios. O `.idea/` inclusive está versionado.
+O diretório já está no `.gitignore`, mas o ignore não vale para arquivos que já eram rastreados. Para removê-lo do repositório: `git rm -r --cached .idea`.

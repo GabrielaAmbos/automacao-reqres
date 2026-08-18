@@ -48,13 +48,15 @@ mvn test -Dtest=PostCreateTest
 2. **A API usa `x-api-key`.** A chave é lida de `REQRES_API_KEY` no `@BeforeClass` de `BaseApiTest`, que falha com `IllegalStateException` explicativa se a variável estiver ausente. **Nunca commitar a chave.**
 3. **A exigência da chave é intermitente**: no mesmo dia a API alternou entre `401` sem header e `200` sem header. Por isso não há testes assertando `401`/`403` — seriam flaky. O header continua sendo enviado sempre.
 4. **Asserções dependem de dados fixos** do reqres (usuário 3 = Emma Wong, recurso 2 = fuchsia rose, `total` = 12) — quebram se a API alterar os registros.
-5. **`.gitignore` incompleto**: `target/` e `.idea/` não estão ignorados; `.idea/` está inclusive versionado.
+5. **`.idea/` ainda versionado**: já está no `.gitignore`, mas o ignore não afeta o que já era rastreado. Remover exige `git rm -r --cached .idea` — não feito porque impacta quem já clonou.
 
 ## Convenções
 
 - **Código em inglês** (variáveis, métodos, classes, arquivos).
 - **Comentários em português**, e apenas quando explicam decisão de negócio.
-- **Documentação em português.**
+- **Documentação em português.** Exceção: o README é bilíngue — `README.md` (PT) e
+  `README.en.md` (EN), com bandeiras no topo linkando um para o outro. Ao alterar um,
+  **atualizar o outro na mesma edição**, senão as versões divergem.
 - **Commits em português**, padrão Conventional Commits: `feat(...)`, `fix(...)`, `chore(...)`.
 - Trabalhar direto na `main`, salvo pedido explícito.
 - Aplicar SOLID e evitar over engineering — o projeto é pequeno e a estrutura deve permanecer proporcional.
