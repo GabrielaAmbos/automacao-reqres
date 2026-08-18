@@ -1,64 +1,64 @@
 <div align="right">
-  <a href="README.md"><img src="https://flagcdn.com/24x18/br.png" alt="Português (Brasil)" title="Português (Brasil)"></a>
+  <a href="README.pt-BR.md"><img src="https://flagcdn.com/24x18/br.png" alt="Português (Brasil)" title="Português (Brasil)"></a>
   &nbsp;
-  <a href="README.en.md"><img src="https://flagcdn.com/24x18/us.png" alt="English" title="English"></a>
+  <a href="README.md"><img src="https://flagcdn.com/24x18/us.png" alt="English" title="English"></a>
 </div>
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=DF62F7&width=435&lines=Projeto+de+Automa%C3%A7%C3%A3o+Reqres)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=DF62F7&width=435&lines=Reqres+Test+Automation+Project)](https://git.io/typing-svg)
 
-Automação de testes de API REST sobre o serviço público [reqres.in](https://reqres.in/), em Java com [REST Assured](https://rest-assured.io/) e JUnit 4.
+REST API test automation against the public [reqres.in](https://reqres.in/) service, written in Java with [REST Assured](https://rest-assured.io/) and JUnit 4.
 
-São **19 cenários** cobrindo todos os endpoints públicos da API, incluindo os caminhos de erro.
+**19 scenarios** covering every public endpoint of the API, error paths included.
 
 ## Stack
 
-| Ferramenta | Versão |
+| Tool | Version |
 |---|---|
 | Java | 15+ |
 | Maven | 3.6+ |
 | REST Assured | 4.3.3 |
 | JUnit | 4.13.2 |
 
-## Como rodar
+## Running the tests
 
-O reqres.in usa autenticação por chave de API. Gere uma chave gratuita em [app.reqres.in/api-keys](https://app.reqres.in/api-keys) e exporte antes de rodar:
+reqres.in requires API key authentication. Get a free key at [app.reqres.in/api-keys](https://app.reqres.in/api-keys) and export it before running:
 
 ```bash
-export REQRES_API_KEY='sua-chave-aqui'
+export REQRES_API_KEY='your-key-here'
 mvn test
 ```
 
-Rodando um cenário específico:
+Running a single scenario:
 
 ```bash
 mvn test -Dtest=PostCreateTest
 ```
 
-A chave nunca é commitada — se a variável não estiver definida, os testes falham com uma mensagem explicando o que fazer.
+The key is never committed — if the variable is not set, the tests fail with a message explaining what to do.
 
-## Cobertura
+## Coverage
 
-| Endpoint | Cenários |
+| Endpoint | Scenarios |
 |---|---|
-| `GET /api/users` | página padrão, página 2, página vazia, `delay=3` |
-| `GET /api/users/{id}` | usuário existente, usuário inexistente (404) |
-| `POST /api/users` | criação (201) |
-| `PUT /api/users/{id}` | substituição (200) |
-| `PATCH /api/users/{id}` | atualização parcial (200) |
-| `DELETE /api/users/{id}` | exclusão (204) |
-| `GET /api/unknown` | listagem, item único, item inexistente (404) |
-| `POST /api/register` | sucesso, sem senha (400), sem e-mail (400) |
-| `POST /api/login` | sucesso, sem senha (400), sem e-mail (400) |
+| `GET /api/users` | default page, page 2, empty page, `delay=3` |
+| `GET /api/users/{id}` | existing user, non-existing user (404) |
+| `POST /api/users` | creation (201) |
+| `PUT /api/users/{id}` | replacement (200) |
+| `PATCH /api/users/{id}` | partial update (200) |
+| `DELETE /api/users/{id}` | deletion (204) |
+| `GET /api/unknown` | list, single item, non-existing item (404) |
+| `POST /api/register` | success, missing password (400), missing email (400) |
+| `POST /api/login` | success, missing password (400), missing email (400) |
 
-Detalhes de cada cenário em [docs/casos-de-teste.md](docs/casos-de-teste.md).
+Each scenario is detailed in [docs/casos-de-teste.md](docs/casos-de-teste.md) (Portuguese).
 
-## Estrutura
+## Structure
 
-Uma classe de teste por endpoint. `BaseApiTest` centraliza a configuração comum — URL base, content-type e o header `x-api-key`:
+One test class per endpoint. `BaseApiTest` holds the shared setup — base URL, content type and the `x-api-key` header:
 
 ```
 src/test/java/tests/
-├── BaseApiTest.java         # Spec compartilhada
+├── BaseApiTest.java         # Shared request spec
 ├── GetUserListTest.java
 ├── GetSingleUserTest.java
 ├── PostCreateTest.java
@@ -70,13 +70,13 @@ src/test/java/tests/
 └── PostLoginTest.java
 ```
 
-## Documentação
+## Documentation
 
-| Documento | Conteúdo |
+| Document | Contents |
 |---|---|
-| [Visão geral](docs/README.md) | Índice e status do projeto |
-| [Arquitetura](docs/arquitetura.md) | Stack, estrutura, decisões e limitações |
-| [Casos de teste](docs/casos-de-teste.md) | Todos os cenários com requisições e asserções |
-| [Como executar](docs/como-executar.md) | Setup, comandos e problemas conhecidos |
+| [Overview](docs/README.md) | Index and project status |
+| [Architecture](docs/arquitetura.md) | Stack, structure, decisions and limitations |
+| [Test cases](docs/casos-de-teste.md) | Every scenario with requests and assertions |
+| [How to run](docs/como-executar.md) | Setup, commands and known issues |
 
-> A documentação em `docs/` está disponível apenas em português.
+> The documentation under `docs/` is available in Portuguese only.
