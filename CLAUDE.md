@@ -54,9 +54,10 @@ mvn test -Dtest=PostCreateTest
 
 - **Código em inglês** (variáveis, métodos, classes, arquivos).
 - **Comentários em português**, e apenas quando explicam decisão de negócio.
-- **Documentação em português.** Exceção: o README é bilíngue — `README.md` (PT) e
-  `README.en.md` (EN), com bandeiras no topo linkando um para o outro. Ao alterar um,
-  **atualizar o outro na mesma edição**, senão as versões divergem.
+- **Documentação em português.** Exceção: o README é bilíngue e o **inglês é a versão
+  principal** — `README.md` (EN, exibido pelo GitHub na home) e `README.pt-BR.md` (PT),
+  com bandeiras no topo linkando um para o outro. Ao alterar um, **atualizar o outro na
+  mesma edição**, senão as versões divergem.
 - **Commits em português**, padrão Conventional Commits: `feat(...)`, `fix(...)`, `chore(...)`.
 - Trabalhar direto na `main`, salvo pedido explícito.
 - Aplicar SOLID e evitar over engineering — o projeto é pequeno e a estrutura deve permanecer proporcional.
